@@ -2,8 +2,8 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #0d0d1a;
   overflow: hidden;
+  background: transparent;
 }
 
 .qr-container {
@@ -19,12 +19,12 @@
   align-items: center;
   gap: 0.5rem;
   z-index: 10;
-  box-shadow: 0 0 60px rgba(94, 96, 206, 0.35);
+  box-shadow: 0 0 60px rgba(0, 76, 186, 0.25);
 }
 
 .qr-label {
   font-size: 0.72rem;
-  color: #555;
+  color: #444;
   margin: 0;
   font-family: sans-serif;
   text-align: center;
@@ -34,23 +34,24 @@
 
 .clear-btn {
   position: fixed;
-  bottom: 1.5rem;
+  top: 1.5rem;
   right: 1.5rem;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.08);
-  color: #888;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.55);
+  color: #444;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  backdrop-filter: blur(4px);
 }
 
 .clear-btn:hover {
-  background: rgba(255, 80, 80, 0.2);
-  color: #ff8080;
-  border-color: rgba(255, 80, 80, 0.35);
+  background: rgba(240, 130, 25, 0.2);
+  color: var(--color-accent);
+  border-color: rgba(240, 130, 25, 0.4);
 }
 
 /*
@@ -75,7 +76,7 @@
   font-family: sans-serif;
   white-space: nowrap;
   pointer-events: none;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes orbitPath {

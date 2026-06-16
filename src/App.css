@@ -1,3 +1,8 @@
+:root {
+  --color-primary: #004CBA;
+  --color-accent: #F08219;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -5,5 +10,9 @@
 }
 
 body {
-  background: #0d0d1a;
+  background-image: url('./assets/bg-image-presentationjpg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: #e8edf5;
 }

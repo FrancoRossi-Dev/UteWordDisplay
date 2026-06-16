@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { listenForWord } from '../firebase'
 import './Display.css'
 
-const COLORS = ['#c8c8ff', '#ff9de2', '#9de2ff', '#ffd89d', '#a0f0b0']
+const COLORS = ['#004CBA', '#004CBA', '#004CBA', '#004CBA', '#004CBA']
 // 4 cubic Bézier curves approximate an ellipse with < 0.03% error
 const KAPPA = 4 * (Math.sqrt(2) - 1) / 3
 
