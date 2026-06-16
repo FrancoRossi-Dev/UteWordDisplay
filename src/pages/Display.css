@@ -1,0 +1,95 @@
+.display {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #0d0d1a;
+  overflow: hidden;
+}
+
+.qr-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  box-shadow: 0 0 60px rgba(94, 96, 206, 0.35);
+}
+
+.qr-label {
+  font-size: 0.72rem;
+  color: #555;
+  margin: 0;
+  font-family: sans-serif;
+  text-align: center;
+  max-width: 160px;
+  line-height: 1.4;
+}
+
+.clear-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.08);
+  color: #888;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 80, 80, 0.2);
+  color: #ff8080;
+  border-color: rgba(255, 80, 80, 0.35);
+}
+
+/*
+  offset-path: path() follows a true Bézier ellipse — no straight-line segments,
+  no corners. Animating offset-distance linearly = constant arc-length speed.
+  offset-rotate: 0deg keeps the text upright throughout the orbit.
+*/
+.orbit-word {
+  position: absolute;
+  offset-rotate: 0deg;
+  transform: scale(var(--orb-scale, 1));
+
+  animation-name: orbitPath, fadeIn;
+  animation-duration: var(--orb-dur), 0.5s;
+  animation-timing-function: linear, ease-out;
+  animation-iteration-count: infinite, 1;
+  animation-fill-mode: none, both;
+  animation-delay: calc(-1 * var(--orb-frac) * var(--orb-dur)), 0s;
+
+  font-size: clamp(1.4rem, 2.6vw, 2.6rem);
+  font-weight: 700;
+  font-family: sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes orbitPath {
+  from { offset-distance: 0%; }
+  to   { offset-distance: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.orbit-count {
+  font-size: 0.55em;
+  opacity: 0.65;
+  vertical-align: super;
+}
