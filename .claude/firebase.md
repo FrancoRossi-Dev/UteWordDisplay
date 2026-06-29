@@ -64,7 +64,43 @@ For production, lock down to write-only from clients:
 }
 ```
 
-## 6. Firebase SDK Usage in Code
+## 6. Enable Firebase Storage (for orbiting images)
+
+Storage is used by the `/admin` page to upload images that orbit on the Form page.
+
+1. In the Firebase console → **Build → Storage** → **Get started**
+2. Choose **Start in test mode** → pick any region → **Done**
+3. Once enabled, go to the **Rules** tab and replace the default with:
+
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /images/{imageId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
+```
+
+4. Add `VITE_FIREBASE_STORAGE_BUCKET` to `.env.local` (and Netlify env vars):
+
+```
+VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+```
+
+The storage bucket name is visible in the Firebase Storage console URL or in the Firebase project settings.
+
+Also add the admin PIN:
+
+```
+VITE_ADMIN_PIN=your_pin_here
+```
+
+The admin page is at `/admin`. Without `VITE_ADMIN_PIN` set, it defaults to `1234`.
+
+## 7. Firebase SDK Usage in Code
 
 ```js
 // src/firebase.js

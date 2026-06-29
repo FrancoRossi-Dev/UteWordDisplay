@@ -1,0 +1,184 @@
+.fbf-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.25rem 3rem;
+  font-family: sans-serif;
+  box-sizing: border-box;
+  color: #1a1a1a;
+}
+
+.fbf-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+.fbf-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  text-align: center;
+  margin: 0 0 1.75rem;
+}
+
+/* ── Score buttons ─────────────────────────────── */
+.fbf-score-row {
+  display: flex;
+  gap: 0.55rem;
+  margin-bottom: 0.6rem;
+  width: 100%;
+  max-width: 360px;
+  justify-content: center;
+}
+
+.fbf-score-btn {
+  flex: 1;
+  aspect-ratio: 1 / 1.15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.75);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  backdrop-filter: blur(4px);
+  padding: 0.35rem 0;
+}
+
+.fbf-score-btn:active {
+  transform: scale(0.93);
+}
+
+.fbf-score-btn.selected {
+  border-color: var(--btn-color, var(--color-primary));
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px var(--btn-color, var(--color-primary)), inset 0 0 0 99px rgba(255,255,255,0.82);
+}
+
+.fbf-score-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.fbf-score-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #444;
+  line-height: 1;
+}
+
+.fbf-score-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 1.25rem;
+  min-height: 1.3em;
+  transition: color 0.2s;
+}
+
+/* ── Comment textarea ──────────────────────────── */
+.fbf-comment {
+  width: 100%;
+  max-width: 360px;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: sans-serif;
+  resize: none;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+.fbf-comment:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 76, 186, 0.12);
+}
+
+.fbf-char-count {
+  width: 100%;
+  max-width: 360px;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.3rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Submit button ─────────────────────────────── */
+.fbf-submit {
+  width: 100%;
+  max-width: 360px;
+  padding: 0.9rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: sans-serif;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.fbf-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fbf-submit:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* ── Thank you screen ──────────────────────────── */
+.fbf-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+  margin-top: 4rem;
+  padding: 2.5rem 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  box-shadow: 0 4px 32px rgba(0, 76, 186, 0.15);
+  max-width: 320px;
+  width: 100%;
+  animation: fbf-pop 0.22s ease-out;
+}
+
+.fbf-thanks-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.fbf-thanks-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.fbf-thanks-sub {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+}
+
+@keyframes fbf-pop {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
