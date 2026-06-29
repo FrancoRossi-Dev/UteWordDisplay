@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, set, push, query, orderByChild, startAt, onValue, onChildAdded } from 'firebase/database'
+import { getDatabase, ref, set, push, update, query, orderByChild, startAt, onValue, onChildAdded } from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,8 +20,14 @@ export const listenForEmotion = (callback) =>
     if (snap.exists()) callback(snap.val())
   })
 
-export const submitFeedback = (score, comment) =>
-  push(ref(db, 'feedback/responses'), { score, comment: comment.trim(), ts: Date.now() })
+export const submitFeedback = (score, comment) => {
+  const id   = push(ref(db, 'feedback/responses')).key
+  const data = { score, comment: comment.trim(), ts: Date.now() }
+  return update(ref(db), {
+    [`feedback/responses/${id}`]: data,  // shown on display, 1-hour window
+    [`feedback/archive/${id}`]:   data,  // permanent record, never queried by the app
+  })
+}
 
 export const listenForFeedbackAdded = (callback) => {
   const oneHourAgo = Date.now() - 60 * 60 * 1000

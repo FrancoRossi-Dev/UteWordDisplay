@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { listenForFeedbackAdded } from '../firebase'
 import './FeedbackDisplay.css'
@@ -81,14 +81,22 @@ function Speedometer({ average, total }) {
 }
 
 const SCORE_COLORS = ['', '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e']
-const BUBBLE_DURATION = 8000
-const BUBBLE_INTERVAL_MIN = 3000
-const BUBBLE_INTERVAL_RANGE = 3500
+
+function makeBubblePos() {
+  const angle = Math.random() * Math.PI * 2
+  const rx = 11 + Math.random() * 20   // horizontal spread %
+  const ry = 8  + Math.random() * 14   // vertical spread %
+  return {
+    x:     50 + Math.cos(angle) * rx,
+    y:     50 + Math.sin(angle) * ry,
+    dur:   3.2 + Math.random() * 2.2,  // bob cycle duration (s)
+    phase: Math.random(),               // 0-1, starting phase of bob
+  }
+}
 
 export default function FeedbackDisplay() {
-  const [responses, setResponses]               = useState([])
-  const [floatingComments, setFloatingComments] = useState([])
-  const responsesRef = useRef([])
+  const [responses, setResponses] = useState([])
+  const [bubbles,   setBubbles]   = useState([])  // one per comment, permanent
 
   const submitUrl = `${window.location.origin}/feedback/submit`
 
@@ -96,40 +104,21 @@ export default function FeedbackDisplay() {
     ? responses.reduce((sum, r) => sum + r.score, 0) / responses.length
     : 1
 
-  // Keep ref in sync so the cycling timer can read latest responses without a stale closure
-  useEffect(() => { responsesRef.current = responses }, [responses])
-
-  // Load responses from Firebase (last hour only)
   useEffect(() => {
     const unsub = listenForFeedbackAdded((entry) => {
       setResponses(prev => {
         if (prev.some(r => r.id === entry.id)) return prev
         return [...prev, entry]
       })
+
+      if (entry.comment) {
+        setBubbles(prev => {
+          if (prev.some(b => b.id === entry.id)) return prev
+          return [...prev, { id: entry.id, text: entry.comment, score: entry.score, ...makeBubblePos() }]
+        })
+      }
     })
     return () => unsub()
-  }, [])
-
-  // Continuously cycle random comments as floating bubbles
-  useEffect(() => {
-    let timer
-
-    const spawnBubble = () => {
-      const withComments = responsesRef.current.filter(r => r.comment)
-      if (withComments.length > 0) {
-        const entry = withComments[Math.floor(Math.random() * withComments.length)]
-        const fid = `${entry.id}-${Date.now()}-${Math.random()}`
-        const x = 4 + Math.random() * 66
-        setFloatingComments(prev => [...prev, { fid, text: entry.comment, score: entry.score, x }])
-        setTimeout(() => {
-          setFloatingComments(prev => prev.filter(c => c.fid !== fid))
-        }, BUBBLE_DURATION)
-      }
-      timer = setTimeout(spawnBubble, BUBBLE_INTERVAL_MIN + Math.random() * BUBBLE_INTERVAL_RANGE)
-    }
-
-    timer = setTimeout(spawnBubble, 1200)
-    return () => clearTimeout(timer)
   }, [])
 
   return (
@@ -163,17 +152,27 @@ export default function FeedbackDisplay() {
         <p className="fb-qr-label">Escaneá para dar tu opinión</p>
       </div>
 
-      {/* Floating comments */}
-      {floatingComments.map(({ fid, text, score, x }) => (
+      {/* Permanent comment bubbles — one per participant, bobbing near the gauge */}
+      {bubbles.map(({ id, text, score, x, y, dur, phase }) => (
         <div
-          key={fid}
-          className="fb-float"
-          style={{ left: `${x}%` }}
+          key={id}
+          className="fb-bubble-pos"
+          style={{ left: `${x}%`, top: `${y}%` }}
         >
-          <span className="fb-float-stars" style={{ color: SCORE_COLORS[score] }}>
-            {'★'.repeat(score)}{'☆'.repeat(5 - score)}
-          </span>
-          <span className="fb-float-text">{text}</span>
+          <div
+            className="fb-bubble-bob"
+            style={{
+              '--bob-dur': `${dur}s`,
+              '--bob-del': `${-(phase * dur).toFixed(2)}s`,
+            }}
+          >
+            <div className="fb-bubble-card">
+              <span className="fb-bubble-stars" style={{ color: SCORE_COLORS[score] }}>
+                {'★'.repeat(score)}{'☆'.repeat(5 - score)}
+              </span>
+              <span className="fb-bubble-text">{text}</span>
+            </div>
+          </div>
         </div>
       ))}
     </div>

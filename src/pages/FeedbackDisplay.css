@@ -106,43 +106,55 @@
   margin: 0;
 }
 
-/* ── Floating comments ────────────────────────── */
-.fb-float {
+/* ── Permanent comment bubbles ────────────────── */
+
+/* 1 — anchor to computed position */
+.fb-bubble-pos {
   position: absolute;
-  bottom: -7rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
   z-index: 5;
+}
+
+/* 2 — gentle bob in place */
+.fb-bubble-bob {
+  animation: fb-bob var(--bob-dur, 4s) ease-in-out var(--bob-del, 0s) infinite;
+}
+
+/* 3 — visual card (also handles the appear) */
+.fb-bubble-card {
+  max-width: 190px;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 0.55rem 0.85rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.3rem;
-  max-width: 220px;
-  background: rgba(255, 255, 255, 0.11);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 20px;
-  padding: 0.65rem 1rem;
-  animation: fb-rise 8s ease-out forwards;
-  pointer-events: none;
+  gap: 0.22rem;
+  animation: fb-appear 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.fb-float-stars {
-  font-size: 0.8rem;
-  letter-spacing: 1.5px;
+.fb-bubble-stars {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  line-height: 1;
 }
 
-.fb-float-text {
+.fb-bubble-text {
   font-family: sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.9);
-  line-height: 1.45;
+  line-height: 1.4;
   word-break: break-word;
 }
 
-@keyframes fb-rise {
-  0%   { transform: translateY(0)        translateX(0);   opacity: 0;   }
-  9%   {                                                   opacity: 1;   }
-  30%  { transform: translateY(-28vh)    translateX(12px);              }
-  60%  { transform: translateY(-58vh)    translateX(-8px);              }
-  85%  {                                                   opacity: 0.9; }
-  100% { transform: translateY(-108vh)   translateX(5px);  opacity: 0;   }
+@keyframes fb-bob {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-9px); }
+}
+
+@keyframes fb-appear {
+  from { opacity: 0; transform: scale(0.6);  }
+  to   { opacity: 1; transform: scale(1);    }
 }
