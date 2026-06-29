@@ -26,7 +26,7 @@ function Speedometer({ average, total }) {
   const arcPath = `M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`
 
   return (
-    <svg viewBox="0 0 300 165" width="100%" height="100%" aria-hidden="true">
+    <svg viewBox="0 0 300 174" width="100%" height="100%" aria-hidden="true">
       <defs>
         <linearGradient id="gaugeGrad" x1={CX - R} y1="0" x2={CX + R} y2="0" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor="#ef4444" />
