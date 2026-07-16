@@ -29,8 +29,8 @@ export default function Form() {
       setTimeout(() => setSent(null), 2500)
     } catch (err) {
       console.error('Error al enviar emoción:', err)
-      setError(`Error: ${err?.code || err?.message || String(err)}`)
-      setTimeout(() => setError(null), 10000)
+      setError('No se pudo enviar. Intentá de nuevo.')
+      setTimeout(() => setError(null), 3000)
     } finally {
       setLoading(false)
     }
