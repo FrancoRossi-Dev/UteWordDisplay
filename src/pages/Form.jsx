@@ -15,12 +15,25 @@ const EMOTIONS = [
 ]
 
 export default function Form() {
-  const [sent, setSent] = useState(null)
+  const [sent,    setSent]    = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState(null)
 
   const send = async (emotionId) => {
-    await submitEmotion(emotionId)
-    setSent(emotionId)
-    setTimeout(() => setSent(null), 2500)
+    if (loading) return
+    setLoading(true)
+    setError(null)
+    try {
+      await submitEmotion(emotionId)
+      setSent(emotionId)
+      setTimeout(() => setSent(null), 2500)
+    } catch (err) {
+      console.error('Error al enviar emoción:', err)
+      setError(`Error: ${err?.code || err?.message || String(err)}`)
+      setTimeout(() => setError(null), 10000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -34,12 +47,19 @@ export default function Form() {
         </div>
       )}
 
+      {error && (
+        <div className="error-badge">
+          {error}
+        </div>
+      )}
+
       <div className="emotion-grid">
         {EMOTIONS.map(({ id }) => (
           <button
             key={id}
-            className="emotion-btn"
+            className={`emotion-btn${loading ? ' loading' : ''}`}
             onClick={() => send(id)}
+            disabled={loading}
             aria-label={id}
           >
             <img
