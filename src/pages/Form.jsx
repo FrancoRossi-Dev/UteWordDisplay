@@ -1,6 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { submitEmotion } from '../firebase'
 import './Form.css'
+
+const COOLDOWN_MS  = 10 * 60 * 1000
+const COOLDOWN_KEY = 'emotion:lastSentAt'
+
+// Stored so the cooldown survives a page reload; storage may be unavailable (private mode)
+function readLastSent() {
+  try {
+    return Number(localStorage.getItem(COOLDOWN_KEY)) || 0
+  } catch {
+    return 0
+  }
+}
+
+function writeLastSent(ts) {
+  try {
+    localStorage.setItem(COOLDOWN_KEY, String(ts))
+  } catch {
+    // Cooldown still applies for this session through state
+  }
+}
 
 const EMOTIONS = [
   { id: 'emotion_1' },
@@ -18,13 +38,29 @@ export default function Form() {
   const [sent,    setSent]    = useState(null)
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState(null)
+  const [lastSentAt, setLastSentAt] = useState(readLastSent)
+  const [now, setNow] = useState(Date.now)
+
+  const coolingDown = now - lastSentAt < COOLDOWN_MS
+  const disabled    = loading || coolingDown
+
+  // Re-enable the buttons once the cooldown expires
+  useEffect(() => {
+    if (!coolingDown) return
+    const id = setTimeout(() => setNow(Date.now()), lastSentAt + COOLDOWN_MS - now)
+    return () => clearTimeout(id)
+  }, [coolingDown, lastSentAt, now])
 
   const send = async (emotionId) => {
-    if (loading) return
+    if (disabled) return
     setLoading(true)
     setError(null)
     try {
       await submitEmotion(emotionId)
+      const ts = Date.now()
+      writeLastSent(ts)
+      setLastSentAt(ts)
+      setNow(ts)
       setSent(emotionId)
       setTimeout(() => setSent(null), 2500)
     } catch (err) {
@@ -57,9 +93,9 @@ export default function Form() {
         {EMOTIONS.map(({ id }) => (
           <button
             key={id}
-            className={`emotion-btn${loading ? ' loading' : ''}`}
+            className="emotion-btn"
             onClick={() => send(id)}
-            disabled={loading}
+            disabled={disabled}
             aria-label={`Emoción ${id.split('_')[1]}`}
           >
             <img
