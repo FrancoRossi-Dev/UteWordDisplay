@@ -11,9 +11,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Hub />} />
         <Route path="/emocion" element={<Display />} />
-        <Route path="/submit" element={<Form />} />
-        <Route path="/feedback" element={<FeedbackDisplay />} />
-        <Route path="/feedback/submit" element={<FeedbackForm />} />
+        <Route path="/emocion/enviar" element={<Form />} />
+        <Route path="/opinion" element={<FeedbackDisplay />} />
+        <Route path="/opinion/enviar" element={<FeedbackForm />} />
       </Routes>
     </BrowserRouter>
   )

@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
+import { useEffect, useRef, useState } from 'react'
 import { listenForEmotion, clearEmotionHistory } from '../firebase'
+import QrPanel from '../components/QrPanel'
 import './Display.css'
 
 const KAPPA = 4 * (Math.sqrt(2) - 1) / 3
-const TARGET_PIXEL_RATIO = 2.26
 
 function ellipsePath(cx, cy, rx, ry) {
   const k = KAPPA
@@ -23,13 +22,18 @@ function scaleForCount(count) {
 
 export default function Display() {
   const [orbitEmotions, setOrbitEmotions] = useState([])
-  const [winSize, setWinSize] = useState({ w: window.innerWidth, h: window.innerHeight })
-  const submitUrl = `${window.location.origin}/submit`
+  const [panelSize, setPanelSize] = useState({ w: 0, h: 0 })
+  const panelRef = useRef(null)
+  const submitUrl = `${window.location.origin}/emocion/enviar`
 
+  // Orbits are laid out inside the results panel, which resizes when the QR is hidden
   useEffect(() => {
-    const onResize = () => setWinSize({ w: window.innerWidth, h: window.innerHeight })
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect
+      setPanelSize({ w: width, h: height })
+    })
+    observer.observe(panelRef.current)
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
@@ -43,54 +47,65 @@ export default function Display() {
         }
         const id       = `${ts}-${Math.random()}`
         const frac     = Math.random()
-        const rx_vw    = 20 + Math.random() * 16
+        const ring     = Math.random()   // 0 = inner orbit, 1 = outer orbit
         const duration = 15 + Math.random() * 21
-        return [...prev, { id, emotionId, count: 1, frac, rx_vw, duration }]
+        return [...prev, { id, emotionId, count: 1, frac, ring, duration }]
       })
     })
     return () => unsubscribe()
   }, [])
 
+  const total    = orbitEmotions.reduce((sum, e) => sum + e.count, 0)
+  const iconBase = Math.min(panelSize.w, panelSize.h) * 0.11
+
   return (
-    <div className="display">
-      <div className="qr-container">
-        <QRCodeSVG value={submitUrl} size={200} bgColor="#ffffff" fgColor="#111111" />
-        <p className="qr-label">Escaneá para compartir cómo te sentís</p>
-      </div>
+    <div className="display split-screen">
+      <QrPanel url={submitUrl} label="Escaneá para compartir cómo te sentís" />
+
+      <main className="results-panel" ref={panelRef}>
+        <div className="orbit-center">
+          <h1 className="orbit-title">¿Cómo nos sentimos hoy?</h1>
+          <p className="orbit-total">
+            {total > 0
+              ? `${total} ${total === 1 ? 'respuesta' : 'respuestas'}`
+              : 'Esperando respuestas…'}
+          </p>
+        </div>
+
+        {orbitEmotions.map(({ id, emotionId, count, frac, ring, duration }) => {
+          // Inner orbit leaves room for the title in the center
+          const rx   = (0.28 + ring * 0.16) * panelSize.w
+          const ry   = (0.26 + ring * 0.16) * panelSize.h
+          const path = ellipsePath(panelSize.w / 2, panelSize.h / 2, rx, ry)
+
+          return (
+            <div
+              key={id}
+              className="orbit-emotion"
+              style={{
+                offsetPath:    `path("${path}")`,
+                '--orb-frac':  frac,
+                '--orb-dur':   `${duration}s`,
+                '--orb-base':  `${iconBase}px`,
+                '--orb-scale': scaleForCount(count),
+              }}
+            >
+              <img
+                src={`/emotionsGabi/${emotionId}.webp`}
+                alt={`Emoción ${emotionId.split('_')[1]}`}
+                className="orbit-emotion-img"
+              />
+              <span className="orbit-emotion-count">{count}</span>
+            </div>
+          )
+        })}
+      </main>
 
       {orbitEmotions.length > 0 && (
         <button className="clear-btn" onClick={() => { setOrbitEmotions([]); clearEmotionHistory() }}>
           Limpiar
         </button>
       )}
-
-      {orbitEmotions.map(({ id, emotionId, count, frac, rx_vw, duration }) => {
-        const pixAspect = winSize.w / winSize.h
-        const ry_vh     = Math.min(rx_vw * pixAspect / TARGET_PIXEL_RATIO, 38)
-        const rxPx      = rx_vw / 100 * winSize.w
-        const ryPx      = ry_vh / 100 * winSize.h
-        const path      = ellipsePath(winSize.w / 2, winSize.h / 2, rxPx, ryPx)
-
-        return (
-          <div
-            key={id}
-            className="orbit-emotion"
-            style={{
-              offsetPath:    `path("${path}")`,
-              '--orb-frac':  frac,
-              '--orb-dur':   `${duration}s`,
-              '--orb-scale': scaleForCount(count),
-            }}
-          >
-            <img
-              src={`/emotionsGabi/${emotionId}.webp`}
-              alt={emotionId}
-              className="orbit-emotion-img"
-            />
-            <span className="orbit-emotion-count">{count}</span>
-          </div>
-        )
-      })}
     </div>
   )
 }

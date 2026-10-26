@@ -29,7 +29,7 @@ export default function FeedbackForm() {
       <div className="fbf-page">
         <div className="fbf-thanks">
           <span className="fbf-thanks-icon">🙏</span>
-          <h2 className="fbf-thanks-title">¡Gracias por tu feedback!</h2>
+          <h2 className="fbf-thanks-title">¡Gracias por responder!</h2>
           <p className="fbf-thanks-sub">Tu opinión nos ayuda a mejorar.</p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function FeedbackForm() {
         onClick={send}
         disabled={!score || loading}
       >
-        {loading ? 'Enviando…' : 'Enviar feedback'}
+        {loading ? 'Enviando…' : 'Enviar respuesta'}
       </button>
     </div>
   )

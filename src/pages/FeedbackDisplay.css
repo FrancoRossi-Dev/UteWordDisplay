@@ -1,21 +1,7 @@
-.fb-display {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+.fb-results {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Dark overlay so gauge is legible over the background image */
-.fb-display::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(8, 16, 36, 0.72);
-  backdrop-filter: blur(2px);
-  z-index: 0;
 }
 
 /* ── Center panel ─────────────────────────────── */
@@ -30,24 +16,23 @@
 
 .fb-heading {
   font-family: sans-serif;
-  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-size: clamp(1.4rem, 3.5cqw, 2.4rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-primary);
   letter-spacing: -0.3px;
   text-align: center;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.9);
   margin-bottom: 0.25rem;
 }
 
 .fb-gauge-wrap {
-  width: clamp(300px, 52vw, 680px);
-  max-height: 60vh;
+  width: min(50cqw, 80cqh, 640px);
 }
 
 /* ── Stats row ────────────────────────────────── */
 .fb-stats {
   font-family: sans-serif;
-  color: #fff;
+  color: var(--color-primary);
   display: flex;
   align-items: baseline;
   gap: 0.25rem;
@@ -59,51 +44,25 @@
   font-weight: 800;
   line-height: 1;
   letter-spacing: -1px;
-  text-shadow: 0 0 32px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.9);
 }
 
 .fb-avg-denom {
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
   font-weight: 500;
-  opacity: 0.6;
+  opacity: 0.75;
 }
 
 .fb-count {
   font-size: clamp(0.85rem, 1.6vw, 1.1rem);
-  opacity: 0.55;
+  opacity: 0.75;
   margin-left: 0.25rem;
 }
 
 .fb-waiting {
   font-size: 1rem;
-  opacity: 0.5;
+  opacity: 0.75;
   font-style: italic;
-}
-
-/* ── QR corner ────────────────────────────────── */
-.fb-qr-corner {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 10;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  box-shadow: 0 0 48px rgba(0, 0, 0, 0.4);
-}
-
-.fb-qr-label {
-  font-size: 0.68rem;
-  color: #444;
-  font-family: sans-serif;
-  text-align: center;
-  max-width: 130px;
-  line-height: 1.4;
-  margin: 0;
 }
 
 /* ── Permanent comment bubbles ────────────────── */
@@ -124,10 +83,11 @@
 /* 3 — visual card (also handles the appear) */
 .fb-bubble-card {
   max-width: 190px;
-  background: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 76, 186, 0.2);
   border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 76, 186, 0.12);
   padding: 0.55rem 0.85rem;
   display: flex;
   flex-direction: column;
@@ -144,7 +104,7 @@
 .fb-bubble-text {
   font-family: sans-serif;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-primary);
   line-height: 1.4;
   word-break: break-word;
 }

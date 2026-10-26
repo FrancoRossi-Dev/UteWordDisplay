@@ -9,7 +9,7 @@ const ROOMS = [
     desc: 'Los participantes comparten su emoción escaneando el QR.',
   },
   {
-    path: '/feedback',
+    path: '/opinion',
     emoji: '📊',
     title: 'Retroalimentación del curso',
     desc: 'Los participantes califican y dejan comentarios al final.',

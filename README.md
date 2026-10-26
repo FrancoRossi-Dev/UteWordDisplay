@@ -10,13 +10,13 @@ Hay dos modos de uso, accesibles desde el hub central (`/`):
 Los participantes escanean el QR y eligen una emoción. Los íconos aparecen orbitando en la pantalla grande en tiempo real.
 
 - **Pantalla grande:** `/emocion`
-- **Formulario móvil:** `/submit`
+- **Formulario móvil:** `/emocion/enviar`
 
-### 📊 Retroalimentación del curso — `/feedback`
+### 📊 Retroalimentación del curso — `/opinion`
 Al final del curso, los participantes califican su experiencia del 1 al 5 y dejan un comentario opcional. La pantalla muestra un velocímetro con el promedio y los comentarios flotan como burbujas.
 
-- **Pantalla grande:** `/feedback`
-- **Formulario móvil:** `/feedback/submit`
+- **Pantalla grande:** `/opinion`
+- **Formulario móvil:** `/opinion/enviar`
 
 Los comentarios de la última hora se muestran de forma continua. Las respuestas anteriores a 60 minutos se ignoran automáticamente.
 
@@ -89,7 +89,7 @@ words/
 
 feedback/
   responses/
-    {id}/               ← cada respuesta de feedback
+    {id}/               ← cada respuesta de la retroalimentación
       score: 4          ← número del 1 al 5
       comment: "Muy bueno"
       ts: 1718000000000
@@ -101,9 +101,9 @@ feedback/
 |------|------------|-----|
 | `/` | `Hub` | Selector de pantalla (para el facilitador) |
 | `/emocion` | `Display` | Pantalla grande — emociones orbitando |
-| `/submit` | `Form` | Formulario móvil — elegir emoción |
-| `/feedback` | `FeedbackDisplay` | Pantalla grande — velocímetro + burbujas |
-| `/feedback/submit` | `FeedbackForm` | Formulario móvil — calificación y comentario |
+| `/emocion/enviar` | `Form` | Formulario móvil — elegir emoción |
+| `/opinion` | `FeedbackDisplay` | Pantalla grande — velocímetro + burbujas |
+| `/opinion/enviar` | `FeedbackForm` | Formulario móvil — calificación y comentario |
 
 ## Notas
 

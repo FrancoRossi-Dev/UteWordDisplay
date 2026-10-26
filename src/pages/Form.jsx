@@ -60,11 +60,11 @@ export default function Form() {
             className={`emotion-btn${loading ? ' loading' : ''}`}
             onClick={() => send(id)}
             disabled={loading}
-            aria-label={id}
+            aria-label={`Emoción ${id.split('_')[1]}`}
           >
             <img
               src={`/emotionsGabi/${id}.webp`}
-              alt={id}
+              alt=""
               className="emotion-img"
             />
           </button>
