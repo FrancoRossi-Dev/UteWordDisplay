@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, set, push, update, query, orderByChild, startAt, onValue, onChildAdded } from 'firebase/database'
+import { getDatabase, ref, set, push, update, remove, query, orderByChild, startAt, onValue, onChildAdded } from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,12 +13,15 @@ const app = initializeApp(firebaseConfig)
 export const db = getDatabase(app)
 
 export const submitEmotion = (emotionId) =>
-  set(ref(db, 'words/latest'), { emotionId, ts: Date.now() })
+  push(ref(db, 'words/history'), { emotionId, ts: Date.now() })
 
 export const listenForEmotion = (callback) =>
-  onValue(ref(db, 'words/latest'), (snap) => {
+  onChildAdded(ref(db, 'words/history'), (snap) => {
     if (snap.exists()) callback(snap.val())
   })
+
+export const clearEmotionHistory = () =>
+  remove(ref(db, 'words/history'))
 
 export const submitFeedback = (score, comment) => {
   const id   = push(ref(db, 'feedback/responses')).key
