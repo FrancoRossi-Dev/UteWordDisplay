@@ -54,23 +54,30 @@
 
 .emotion-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* 4 tracks, each item spans 2 → 2 per row; lets an odd last item sit centered */
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.65rem;
   width: 100%;
   max-width: 360px;
+}
+
+.emotion-grid > .emotion-btn {
+  grid-column: span 2;
+}
+
+.emotion-grid > .emotion-btn:last-child:nth-child(odd) {
+  grid-column: 2 / span 2;
 }
 
 .emotion-btn {
   background: rgba(255, 255, 255, 0.75);
   border: 2px solid transparent;
   border-radius: 14px;
-  padding: 0.5rem;
+  padding: 0;
+  overflow: hidden;
   cursor: pointer;
   transition: border-color 0.15s, transform 0.1s, background 0.15s;
-  aspect-ratio: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
   backdrop-filter: blur(4px);
 }
 
@@ -98,10 +105,9 @@
 }
 
 .emotion-img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
+  height: auto;
   pointer-events: none;
 }
 
